@@ -64,23 +64,24 @@ class UIFileDialog(UIWindow):
         self.delete_confirmation_dialog = None  # type: Union[UIConfirmationDialog, None]
         self.current_file_path = None  # type: Union[Path, None]
 
-        if initial_file_path is not None:
-            pathed_initial_file_path = Path(initial_file_path)
-            if pathed_initial_file_path.exists() and not pathed_initial_file_path.is_file():
-                self.current_directory_path = str(pathed_initial_file_path.resolve())
-                if self.allow_picking_directories:
-                    self.current_file_path = Path(self.current_directory_path)
-            elif pathed_initial_file_path.exists() and pathed_initial_file_path.is_file():
-                self.current_file_path = pathed_initial_file_path.resolve()
-                self.current_directory_path = str(pathed_initial_file_path.parent.resolve())
-            elif pathed_initial_file_path.parent.exists():
-                self.current_directory_path = str(pathed_initial_file_path.parent.resolve())
-                self.current_file_path = (Path(initial_file_path).parent.resolve() /
-                                          Path(initial_file_path).name)
-            else:
-                self.current_directory_path = str(Path('.').resolve())
+        if initial_file_path is None:
+            initial_file_path = str(Path('.').resolve())
+            
+        pathed_initial_file_path = Path(initial_file_path)
+        if pathed_initial_file_path.exists() and not pathed_initial_file_path.is_file():
+            self.current_directory_path = str(pathed_initial_file_path.resolve())
+            if self.allow_picking_directories:
+                self.current_file_path = Path(self.current_directory_path)
+        elif pathed_initial_file_path.exists() and pathed_initial_file_path.is_file():
+            self.current_file_path = pathed_initial_file_path.resolve()
+            self.current_directory_path = str(pathed_initial_file_path.parent.resolve())
+        elif pathed_initial_file_path.parent.exists():
+            self.current_directory_path = str(pathed_initial_file_path.parent.resolve())
+            self.current_file_path = (Path(initial_file_path).parent.resolve() /
+                                      Path(initial_file_path).name)
         else:
             self.current_directory_path = str(Path('.').resolve())
+            
 
         self.last_valid_directory_path = self.current_directory_path
 
